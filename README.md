@@ -35,7 +35,7 @@ In this lab, we are going to write a Python program with Ryu SDN framework to bu
 第二個終端機再輸入  
 > ryu-manager SimpleController.py --observe-links  
 
-意思是使用Ryu Controller(ryu-manager <PYTHON FILE NAME>.py --observe-links)，controller的規則為SimpleController.py，若要以另一種規則來進行比較，則將SimpleController.py改寫為controller.py，以另一個py檔來定義新規則  
+意思是使用Ryu Controller(ryu-manager PYTHON_FILE_NAME.py --observe-links)，controller的規則為SimpleController.py，若要以另一種規則來進行比較，則將SimpleController.py改寫為controller.py，以另一個py檔來定義新規則  
 
 run SimpleController.py  
 ![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_Simplecontroller.png)  
@@ -55,7 +55,7 @@ run controller.py
 > h2 iperf -c 10.0.0.1 -u -i 1 -p 5566  
 
 意思分別是將名為h1的Host訂為Server(-s)，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，結果輸出到./out/result1或是./out/result2，使用的port為5566(-p 5566)  
-名為h1的Host訂為Client(-c)，其server的IP為10.0.0.1，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，其server使用的port為5566(-p 5566)  
+名為h2的Host訂為Client(-c)，其server的IP為10.0.0.1，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，其server使用的port為5566(-p 5566)  
 
 result1  
 ![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_result1.png)  
