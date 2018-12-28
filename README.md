@@ -30,6 +30,10 @@ In this lab, we are going to write a Python program with Ryu SDN framework to bu
 > mn --custom topo.py --topo topo --link tc --controller remote  
 
 分別代表的意思是進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+若出現錯誤訊息RTNETLINK answers: File exists，則輸入  
+> mn -c  
+
+來clean up Mininet，然後再試一次即可  
 ![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_topo.png)  
 
 第二個終端機再輸入  
@@ -71,15 +75,54 @@ result2
 > TODO:
 > * Describe how you finish this work in detail
 
-1. Environment Setup
+1. **Environment Setup**  
 
-2. Example of Ryu SDN
+打開PieTTY後連線140.113.195.69並login  
+若要更改密碼則輸入指令  
+> passwd  
 
-3. Mininet Topology
+接下來是要複製我們這次的lab專案到container中，輸入指令  
+> git clone https://github.com/nctucn/lab3-jillkuo.git  
 
-4. Ryu Controller
+並登入帳號，專案就會下載到root資料夾中，輸入  
+> ls  
 
-5. Measurement
+就會看到名為lab3-jillkuo的資料夾，就是本次lab的專案  
+接著要試跑Mininet，輸入  
+> mn  
+
+若出現錯誤訊息，輸入  
+> service openvswitch-switch start  
+
+即可解決  
+
+2. **Example of Ryu SDN**  
+
+一開始先在一個終端機跑SimpleTopo.py，先將路徑改到src資料夾，輸入  
+> mn --custom SimpleTopo.py --topo topo --link tc --controller remote  
+
+進入CLI mode  
+意思是進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+若出現錯誤訊息RTNETLINK answers: File exists，則輸入  
+> mn -c  
+來clean up Mininet即可  
+
+再開啟另一個終端機跑SimpleController.py，先將路徑改到src資料夾，輸入  
+> ryu-manager SimpleController.py --observelinks  
+
+
+
+3. **Mininet Topology**  
+
+
+
+4. **Ryu Controller**  
+
+
+
+5. **Measurement**  
+
+
 
 ### Discussion
 
