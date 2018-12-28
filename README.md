@@ -19,7 +19,49 @@ In this lab, we are going to write a Python program with Ryu SDN framework to bu
 > TODO:
 > * How to run your program?
 > * What is the meaning of the executing command (both Mininet and Ryu controller)?
-> * Show the screenshot of using iPerf command in Mininet (both `SimpleController.py` and `controller.py`)
+> * Show the screenshot of using iPerf command in Mininet (both `SimpleController.py` and `controller.py`)  
+
+這是這次LAB所使用的拓樸結構圖  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/topo_2.jpg)  
+以這張圖為條件限制，編輯完topo.py  
+
+開啟兩個終端機來到正確的地址  
+第一個終端機先輸入  
+> mn --custom topo.py --topo topo --link tc --controller remote  
+
+分別代表的意思是進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_topo.png)  
+
+第二個終端機再輸入  
+> ryu-manager SimpleController.py --observe-links  
+
+意思是使用Ryu Controller(ryu-manager <PYTHON FILE NAME>.py --observe-links)，controller的規則為SimpleController.py，若要以另一種規則來進行比較，則將SimpleController.py改寫為controller.py，以另一個py檔來定義新規則  
+
+run SimpleController.py  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_Simplecontroller.png)  
+
+run controller.py  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_controller.png)  
+
+
+接著回到第一個終端機，在CLI mode中輸入iPerf command  
+若是使用SimpleController.py則第一行輸入  
+> h1 iperf -s -u -i 1 -p 5566 > ./out/result1 &  
+
+若是使用controller.py則第一行輸入  
+> h1 iperf -s -u -i 1 -p 5566 > ./out/result2 &  
+
+接下來第二行輸入  
+> h2 iperf -c 10.0.0.1 -u -i 1 -p 5566  
+
+意思分別是將名為h1的Host訂為Server(-s)，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，結果輸出到./out/result1或是./out/result2，使用的port為5566(-p 5566)  
+名為h1的Host訂為Client(-c)，其server的IP為10.0.0.1，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，其server使用的port為5566(-p 5566)  
+
+result1  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_result1.png)  
+
+result2  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/run_result2.png)  
 
 ---
 ## Description
