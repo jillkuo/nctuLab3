@@ -250,16 +250,48 @@ Clean up Mininet
 > TODO:
 > * Answer the following questions
 
-1. Describe the difference between packet-in and packet-out in detail.
+1. Describe the difference between packet-in and packet-out in detail.  
+
+controller下達指令給OpenFlow交換器，然後OpenFlow會執行任務  
+* packet-in是指將接收到的封包進行轉送到 Controller 的動作  
+* packet-out是指將接收到來自 Controller 的封包轉送到指定的連接埠的動作  
+
+> Controller 使用 Packet-In 接收來自交換器的封包之後進行分析，得到連接埠相關資料以及所連接的 host 之 MAC 位址。  
+> 在學習之後，對所收到的封包進行轉送。將封包的目的位址，在已經學習的 host 資料中進行檢索，根據檢索的結果會進行下列處理。  
+> * 已經存在記錄中的 host：使用 Packet-Out 功能轉送至先前所對應的連接埠  
+> * 尚未存在記錄中的 host：使用 Packet-Out 功能來達到 Flooding  
    
-2. What is “table-miss” in SDN?
+2. What is “table-miss” in SDN?  
+
+在收到一個封包後，會將這個封包的相關訊息進行比對，來決定將這個封包傳送出去的路徑，但是有可能會出現比對完所有條件後，仍然沒有一個條件符合這個封包，這樣就會不知道該拿這個封包怎麼辦，因此我們需要新增 Table-miss Flow Entry 到 Flow table 中，來避免當出現不符合其他所有條件的封包時不知道該怎麼辦的窘境，有點像if條件句中的else來概括所有其他條件  
    
-3. Why is "`(app_manager.RyuApp)`" adding after the declaration of class in `controller.py`?
+3. Why is "`(app_manager.RyuApp)`" adding after the declaration of class in `controller.py`?  
+
+在物件導向中class之間有繼承的關係，app_manager是import進來的library，在這個library中有名為RyuApp的class，所以在controller.py打app_manager.RyuApp，指的就是app_manager的RyuApp，寫`class SimpleController1(app_manager.RyuApp)`
+就是說SimpleController1這個class是constructor and inherit from RyuApp which in app_manager  
    
 4. Explain the following code in `controller.py`.
     ```python
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
-    ```
+    ```  
+    
+這裡定義了當交換機收到封包後要將封包傳送出去的方法  
+> * 收到的訊息若是包含 LACP data unit 的狀況下，就執行 LACP 函式庫中 LACP data unit 的處理機制  
+> * 收到的訊息不包含 LACP data unit 的狀況下，則呼叫 send_event_to_observers()  
+>
+```python
+@set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
+    def packet_in_handler(self, evt):
+    """PacketIn event handler. when the received packet was LACP,
+    proceed it. otherwise, send a event."""
+    req_pkt = packet.Packet(evt.msg.data)
+    if slow.lacp in req_pkt:
+        (req_lacp, ) = req_pkt.get_protocols(slow.lacp)
+        (req_eth, ) = req_pkt.get_protocols(ethernet.ethernet)
+        self._do_lacp(req_lacp, req_eth.src, evt.msg)
+    else:
+        self.send_event_to_observers(EventPacketIn(evt.msg))
+```  
 
 5. What is the meaning of “datapath” in `controller.py`?
    
