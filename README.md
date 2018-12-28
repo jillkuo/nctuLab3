@@ -98,31 +98,152 @@ result2
 
 2. **Example of Ryu SDN**  
 
+* 先後順序很重要  
+
 一開始先在一個終端機跑SimpleTopo.py，先將路徑改到src資料夾，輸入  
 > mn --custom SimpleTopo.py --topo topo --link tc --controller remote  
 
 進入CLI mode  
-意思是進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+意思是進入Mininet CLI(mn)，指定SimpleTopo.py(--custom SimpleTopo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
 若出現錯誤訊息RTNETLINK answers: File exists，則輸入  
 > mn -c  
+
 來clean up Mininet即可  
 
 再開啟另一個終端機跑SimpleController.py，先將路徑改到src資料夾，輸入  
 > ryu-manager SimpleController.py --observelinks  
 
+使用Ryu Controller(ryu-manager PYTHON_FILE_NAME.py --observe-links)，controller的規則為SimpleController.py  
+接下來就是要結束執行程式，先在執行SimpleTopo.py的終端機中的CLI mode中輸入  
+> exit  
 
+來離開CLI mode，然後再執行SimpleController.py的終端機中按Ctrl加z來中斷程式，然後輸入  
+> mn -c  
+
+Clean up Mininet  
 
 3. **Mininet Topology**  
 
+首先要複製SimpleTopo.py到topo.py，輸入  
+> cp SimpleTopo.py topo.py  
 
+cp就是複製檔案的指令，SimpleTopo.py是被複製的檔案，topo.py是複製後的檔案名稱  
+接著編輯topo.py，根據下圖的限制增加條件，輸入  
+> vim topo.py  
+
+進入topo.py，按i開始編輯，按ESC離開編輯模式，輸入  
+> :wq  
+
+回到終端機  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/topo_2.jpg)  
+
+* 先後順序很重要  
+
+接下來執行程式看有沒有BUG，輸入  
+> mn --custom topo.py --topo topo --link tc --controller remote  
+
+進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+若出現錯誤訊息invalid syntax 代表topo.py中有BUG  
+若出現錯誤訊息File exists，則輸入  
+> mn -c  
+
+即可解決  
+接下來再另一個終端機的src資料夾路徑中輸入指令  
+> ryu-manager SimpleController.py –observe-links  
+
+使用Ryu Controller(ryu-manager PYTHON_FILE_NAME.py --observe-links)，controller的規則為SimpleController.py  
+
+要結束程式的話，跟之前一樣，先在執行topo.py的終端機中的CLI mode中輸入  
+> exit  
+
+來離開CLI mode，然後再執行SimpleController.py的終端機中按Ctrl加z來中斷程式，然後輸入  
+> mn -c  
+
+Clean up Mininet  
 
 4. **Ryu Controller**  
 
+首先複製SimpleController.py到controller.py中，輸入指令  
+> cp SimpleController.py controller.py  
 
+cp是複製檔案的指令，SimpleController.py是被複製的檔案，controller.py是複製後的檔案名稱  
+接著編輯controller.py，根據助教給的限制增加條件，輸入  
+> vim controller.py  
+
+進入controller.py，按i開始編輯，按ESC離開編輯模式，輸入  
+> :wq  
+
+而在controller.py中，我們只需要編輯
+    ```python
+    switch_features_handler(self, ev)
+    ```
+這個function即可  
 
 5. **Measurement**  
 
+接著我們要開始做實驗，比較在網路拓圖結構為topo.py的情況下，使用SimpleController.py的forwarding rules和使用controller.py的forwarding rules會有什麼樣的差別  
 
+* 先後順序很重要  
+
+首先執行topo.py，在一個終端機中輸入  
+> mn --custom topo.py --topo topo --link tc --controller remote  
+
+進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+若出現錯誤訊息File exists，則輸入  
+> mn -c  
+
+即可  
+接著在另一個終端機中執行SimpleController.py，輸入指令  
+> ryu-manager SimpleController.py –observe-links  
+
+使用Ryu Controller(ryu-manager PYTHON_FILE_NAME.py --observe-links)，controller的規則為SimpleController.py  
+然後再回到執行topo.py的終端機，在CLI模式中輸入指定的測量指令  
+> h1 iperf -s -u -i 1 -p 5566 > ./out/result1 &  
+
+第二行輸入  
+> h2 iperf -c 10.0.0.1 -u -i 1 -p 5566  
+
+將名為h1的Host訂為Server(-s)，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，結果輸出到./out/result1，使用的port為5566(-p 5566)  
+名為h2的Host訂為Client(-c)，其server的IP為10.0.0.1，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，其server使用的port為5566(-p 5566)  
+然後要結束執行程式，在執行topo.py的終端機中的CLI模式中輸入  
+> exit  
+
+在執行SimpleController.py的終端機中按Ctrl加z直接中斷程式，然後輸入  
+> mn -c  
+
+Clean up Mininet  
+
+然後再接著測量controller.py  
+再執行一次topo.py，在一個終端機中輸入  
+> mn --custom topo.py --topo topo --link tc --controller remote  
+
+進入Mininet CLI(mn)，指定topo.py(--custom topo.py)，且在這個py檔中，最後一行的名稱為topo(--topo topo)，對link設定參數(--link tc)，Using a Remote Controller(--controller remote)  
+若出現錯誤訊息File exists，則輸入  
+> mn -c  
+
+即可  
+
+接著在另一個終端機中執行controller.py，輸入指令  
+> ryu-manager controller.py –observe-links  
+
+使用Ryu Controller(ryu-manager PYTHON_FILE_NAME.py --observe-links)，controller的規則為controller.py  
+若出現錯誤訊息ImportError: No module named controller.py則表示controller.py中有BUG  
+
+然後再回到執行topo.py的終端機，在CLI模式中輸入指定的測量指令  
+> h1 iperf -s -u -i 1 -p 5566 > ./out/result2 &  
+
+第二行輸入  
+> h2 iperf -c 10.0.0.1 -u -i 1 -p 5566  
+
+將名為h1的Host訂為Server(-s)，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，結果輸出到./out/result2，使用的port為5566(-p 5566)  
+名為h2的Host訂為Client(-c)，其server的IP為10.0.0.1，使用UDP協定(-u)，每經過一秒都顯示一筆數據(-i 1)，其server使用的port為5566(-p 5566)  
+然後要結束執行程式，在執行topo.py的終端機中的CLI模式中輸入  
+> exit  
+
+在執行controller.py的終端機中按Ctrl加z直接中斷程式，然後輸入  
+> mn -c  
+
+Clean up Mininet  
 
 ### Discussion
 
