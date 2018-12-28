@@ -268,7 +268,7 @@ controller下達指令給OpenFlow交換器，然後OpenFlow會執行任務
 3. Why is "`(app_manager.RyuApp)`" adding after the declaration of class in `controller.py`?  
 
 在物件導向中class之間有繼承的關係，app_manager是import進來的library，在這個library中有名為RyuApp的class，所以在controller.py打app_manager.RyuApp，指的就是app_manager的RyuApp，寫`class SimpleController1(app_manager.RyuApp)`
-就是說SimpleController1這個class是constructor and inherit from RyuApp which in app_manager  
+就是說SimpleController1這個class is constructor and inherit from RyuApp which in app_manager  
    
 4. Explain the following code in `controller.py`.
     ```python
@@ -320,6 +320,10 @@ controller.py的forwarding rules比較好
 > TODO: 
 > * Please add your references in the following
 
+* **References**
+    * [Mininet基本演練](https://wiki.kshuang.xyz/doku.php/ccis_lab:sdn:mininet:mininet_basic)
+    * [利用 iperf 測試網路效能](https://cms.35g.tw/coding/%E5%88%A9%E7%94%A8-iperf-%E6%B8%AC%E8%A9%A6%E7%B6%B2%E8%B7%AF%E6%95%88%E8%83%BD/)
+
 * **Ryu SDN**
     * [Ryubook Documentation](https://osrg.github.io/ryu-book/en/html/)
     * [Ryubook [PDF]](https://osrg.github.io/ryu-book/en/Ryubook.pdf)
@@ -344,7 +348,7 @@ controller.py的forwarding rules比較好
 > TODO:
 > * Please replace "`YOUR_NAME`" and "`YOUR_GITHUB_LINK`" into yours
 
-* [YOUR_NAME](YOUR_GITHUB_LINK)
+* [Jill Kuo](https://github.com/jillkuo)
 * [David Lu](https://github.com/yungshenglu)
 
 ---
