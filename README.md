@@ -52,7 +52,7 @@ In this lab, we are going to write a Python program with Ryu SDN framework to bu
    
 4. Explain the following code in `controller.py`.
     ```python
-    @set_ev_cls(ofp_event.EventOFPPacketIn, CONFIG_DISPATCHER)
+    @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     ```
 
 5. What is the meaning of “datapath” in `controller.py`?
