@@ -293,13 +293,26 @@ controller下達指令給OpenFlow交換器，然後OpenFlow會執行任務
         self.send_event_to_observers(EventPacketIn(evt.msg))
 ```  
 
-5. What is the meaning of “datapath” in `controller.py`?
+5. What is the meaning of “datapath” in `controller.py`?  
+
+datapath在controller.py可以看作是封包的路徑資料，比如說datapath的id(datapath.id)表示現在到達了哪個交換機switch  
    
-6. Why need to set "`ip_proto=17`" in the flow entry?
+6. Why need to set "`ip_proto=17`" in the flow entry?  
+
+ip_proto表示IP協定種類，ip_proto=17表示User Datagram Protocol (UDP)  
    
-7. Compare the differences between the iPerf results of `SimpleController.py` and `controller.py` in detail.
+7. Compare the differences between the iPerf results of `SimpleController.py` and `controller.py` in detail.  
+
+在SimpleController.py中，若要從h2傳送封包到h1，路徑是h2-s3-s1-h1  
+在controller.py中，若要從h2傳送封包到h1，路徑是h2-s3-s2-s1-h1  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/topo_2.jpg)  
    
-8. Which forwarding rule is better? Why?
+8. Which forwarding rule is better? Why?  
+
+controller.py的forwarding rules比較好  
+因為在相同的時間，controller.py(result2)內能傳送的資料較多(1.23Mbytes)，且遺失的封包較少(15)  
+而SimpleController.py(result1)在相同的時間內能傳送的資料較少(1.20Mbytes)，且遺失的封包較多(36)  
+![alt text](https://github.com/nctucn/lab3-jillkuo/blob/master/src/lab3_png/result.png)  
 
 ---
 ## References
